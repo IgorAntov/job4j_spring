@@ -37,6 +37,9 @@ public class HomeController {
 	@Autowired
 	CarsService carsService;
 
+    /**
+     * Change status to SOLD
+     */
 	@RequestMapping(value="/adsupdate",  method = RequestMethod.POST)
 	public ModelAndView adsUpdate(@RequestParam(value = "id", required = true) String id, HttpSession session, Model model) throws IOException{
 		Cars car = carsStore.findCarById(id);
@@ -47,6 +50,9 @@ public class HomeController {
 		return new ModelAndView("redirect:/carslist");
 	}
 
+    /**
+     * Image download
+     */
 	@RequestMapping(value="/image",  method = RequestMethod.GET)
 	public @ResponseBody byte[] downloadImage(@RequestParam(value = "fileName", required = true) String fileName, HttpServletRequest request) throws IOException{
 		ServletContext servletContext = request.getServletContext();
@@ -57,6 +63,9 @@ public class HomeController {
 		return IOUtils.toByteArray(in);
 	}
 
+    /**
+     * Show full car information
+     */
 	@RequestMapping(value="/showads", method = RequestMethod.GET)
 	public ModelAndView showAds(@RequestParam(value = "id", required = true) String car_id, Model model) throws IOException{
 		Cars car = carsStore.findCarById(car_id);
@@ -65,6 +74,9 @@ public class HomeController {
 		return new ModelAndView("showads");
 	}
 
+    /**
+     * Show form - Add new car
+     */
 	@RequestMapping(value="/addads",  method = RequestMethod.POST)
 	public ModelAndView addAds(HttpServletRequest req, Model model) throws IOException{
 		Cars car = getCars(req);
@@ -72,6 +84,9 @@ public class HomeController {
 		return new ModelAndView("redirect:/carslist");
 	}
 
+    /**
+     * Add new car to DB
+     */
 	@RequestMapping(value="/addads",  method = RequestMethod.GET)
 	public ModelAndView showAdsForm(Model model) throws IOException{
 		model.addAttribute("body", carsStore.findAllBody());
@@ -83,6 +98,9 @@ public class HomeController {
 		return new ModelAndView("addads");
 	}
 
+    /**
+     * User registration
+     */
 	@RequestMapping(value="/reg",  method = RequestMethod.GET)
 	public ModelAndView showRegForm() throws IOException{
 		return new ModelAndView("adduser");
@@ -96,7 +114,9 @@ public class HomeController {
 		return new ModelAndView("redirect:/carslist");
 	}
 
-
+    /**
+     * User authorization
+     */
 	@RequestMapping(value="/signin")
 	public ModelAndView signInShowForm() throws IOException{
 		return new ModelAndView("signin");
@@ -114,6 +134,9 @@ public class HomeController {
 		}
 	}
 
+    /**
+     * User sign-out
+     */
 	@RequestMapping(value="/signout")
 	public ModelAndView signOut(HttpSession session, Model model) throws IOException{
 		session.invalidate();
@@ -125,6 +148,9 @@ public class HomeController {
 		return new ModelAndView("redirect:/carslist");
 	}
 
+    /**
+     * Home page - cars list
+     */
 	@RequestMapping(value="/carslist", method = RequestMethod.GET)
 	public ModelAndView getCarsList(Model model) throws IOException{
 		model.addAttribute("brand", carsStore.findAllBrand());
