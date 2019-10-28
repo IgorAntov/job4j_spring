@@ -18,12 +18,6 @@ import java.util.List;
  */
 @Repository
 public class CarsStore implements DaoCars, DaoAdUser, DaoBody, DaoBrand, DaoDrive, DaoEngine, DaoTransmission, DaoWheel {
-    private static CarsStore ourInstance = new CarsStore();
-
-    public static CarsStore getInstance() {
-        System.out.println("carstore");
-        return ourInstance;
-    }
 
     @Autowired
     DaoWrepper daoWrepper;
