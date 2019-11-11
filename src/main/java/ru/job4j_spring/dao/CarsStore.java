@@ -4,11 +4,10 @@ import org.hibernate.Session;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import ru.job4j_spring.filters.DoFilter;
 import ru.job4j_spring.filters.FilterList;
 import ru.job4j_spring.models.*;
 
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -16,11 +15,14 @@ import java.util.List;
  * @version $Id$
  * @since 0.1
  */
-@Repository
-public class CarsStore implements DaoCars, DaoAdUser, DaoBody, DaoBrand, DaoDrive, DaoEngine, DaoTransmission, DaoWheel {
+@Repository(value = "Store")
+public class CarsStore implements DAO {
 
     @Autowired
     DaoWrepper daoWrepper;
+
+    @Autowired
+    DoFilter doFilter;
 
     @Override
     public boolean addCar(Cars cars) {
@@ -170,42 +172,7 @@ public class CarsStore implements DaoCars, DaoAdUser, DaoBody, DaoBrand, DaoDriv
 
     @Override
     public List<Cars> filtersCars(FilterList filterList) {
-       final Session session = daoWrepper.getSessionFactory().openSession();
-
-        try {
-            List<Cars> result;
-            filterEnable(filterList, session);
-            result = (List<Cars>) session.createQuery("From Cars c").list();
-            filterDisable(filterList, session);
-            return result;
-        } catch (final Exception e) {
-            session.getTransaction().rollback();
-            throw e;
-        } finally {
-            session.close();
-        }
-    }
-
-    private void filterDisable(FilterList filterList, Session session) {
-        if (!filterList.getPeriod().isEmpty()) {
-            session.disableFilter("dateFilter");
-        }
-        if (!filterList.getBrand().isEmpty()) {
-            session.disableFilter("brandFilter");
-        }
-    }
-
-    private void filterEnable(FilterList filterList, Session session) {
-        if (!filterList.getBrand().isEmpty()) {
-            session.enableFilter("brandFilter").setParameter("brand", Integer.parseInt(filterList.getBrand()));
-        }
-        if (!filterList.getPeriod().isEmpty()) {
-            Date currentDate = new Date();
-            Calendar c = Calendar.getInstance();
-            c.setTime(currentDate);
-            c.add(Calendar.DATE, -1 * Integer.parseInt(filterList.getPeriod()));
-            Date currentDatePlusDays = c.getTime();
-            session.enableFilter("dateFilter").setParameter("dateParam", currentDatePlusDays);
-        }
+        Session session = daoWrepper.getSessionFactory().openSession();
+        return  doFilter.filtersCars(filterList, session);
     }
 }

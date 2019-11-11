@@ -18,11 +18,13 @@ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import ru.job4j_spring.dao.CarsStore;
+import ru.job4j_spring.dao.DAO;
 import ru.job4j_spring.filters.FilterList;
 import ru.job4j_spring.models.AdUser;
 import ru.job4j_spring.models.Cars;
@@ -33,7 +35,8 @@ import ru.job4j_spring.services.CarsService;
 public class HomeController {
 	private final static String SAVE_DIR = "uploadFiles";
 	@Autowired
-	private CarsStore carsStore;
+	@Qualifier("StoreJPA")
+	private DAO carsStore;
 	@Autowired
 	CarsService carsService;
 
